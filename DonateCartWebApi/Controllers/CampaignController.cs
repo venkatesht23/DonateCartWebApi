@@ -1,4 +1,5 @@
 ﻿using DonateCartWebApi.Models;
+using DonateCartWebApi.Models.Dtos;
 using DonateCartWebApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -20,11 +21,23 @@ namespace DonateCartWebApi.Controllers
 
         [HttpGet]
         [Route("getCampaigns")]
-        public async Task<IEnumerable<Campaign>> GetCampaigns()
+        public async Task<IEnumerable<CampaignDto>> GetCampaigns()
         {
             var campaigns = await _campaignService.GetCampaigns();
 
-            return campaigns;
+
+            List<CampaignDto> campaignsDto = new List<CampaignDto>();
+            foreach (var x in campaigns)
+            {
+                campaignsDto.Add(new CampaignDto()
+                {
+                    Title = x.Title,
+                    BackersCount = x.BackersCount,
+                    TotalAmount = x.TotalAmount,
+                    EndDate = x.EndDate
+                });
+            }
+            return campaignsDto;
         }
 
         [HttpGet]
